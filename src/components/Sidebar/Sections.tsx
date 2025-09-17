@@ -11,6 +11,7 @@ export const Sections = () => (
     </Wrapper>
 )
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+    padding: 10px;`;
 
 const SectionItem = styled.div``;
