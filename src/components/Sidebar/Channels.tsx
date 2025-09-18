@@ -1,25 +1,41 @@
-import {type ReactNode, useState} from "react";
+import {type ReactNode, useEffect, useState} from "react";
 import styled from "styled-components";
+import {useAppDispatch, useAppSelector} from "../../hooks/hooks.ts";
+import { fetchSections} from "../../redux/sectionsReducer.ts";
 
-export const Channels = () => (
-    <Wrapper>
-        <ChannelItem title={"Канал_вне_секции"}/>
-        <ChannelItem title={"Разработка"}>
-            <ChannelContent>
-                <SkillGroup title={"Git"} current={3}>
-                    <SkillItem title={"Front_one"}/>
-                    <SkillItem title={"Front_two"}/>
-                </SkillGroup>
-                <SkillGroup title={"Это очень длинное название канала кококококококо"}/>
-                <SkillGroup title={"QAA"} current={23}>
-                    <SkillItem title={"Запросы"}/>
-                    <SkillItem title={"MR"} current={13}/>
-                    <SkillItem title={"Автотесты"} current={10}/>
-                </SkillGroup>
-            </ChannelContent>
-        </ChannelItem>
-    </Wrapper>
-)
+export const Channels = () => {
+
+    const {sections} = useAppSelector(({sections}) => sections );
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(fetchSections());
+    }, [dispatch]);
+
+    return (
+        <Wrapper>
+            { sections.map(({title, id}) =>
+                <ChannelItem key={id} title={title || "Канал_вне_секции"} />
+            )
+            }
+            <ChannelItem title={"Канал_вне_секции"}/>
+            <ChannelItem title={"Разработка"}>
+                <ChannelContent>
+                    <SkillGroup title={"Git"} current={3}>
+                        <SkillItem title={"Front_one"}/>
+                        <SkillItem title={"Front_two"}/>
+                    </SkillGroup>
+                    <SkillGroup title={"Это очень длинное название канала кококококококо"}/>
+                    <SkillGroup title={"QAA"} current={23}>
+                        <SkillItem title={"Запросы"}/>
+                        <SkillItem title={"MR"} current={13}/>
+                        <SkillItem title={"Автотесты"} current={10}/>
+                    </SkillGroup>
+                </ChannelContent>
+            </ChannelItem>
+        </Wrapper>
+    )
+}
 
 
 const ChannelItem = ({title, children}: { title: string, children?: ReactNode }) => (
