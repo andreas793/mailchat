@@ -3,20 +3,22 @@ import styled from "styled-components";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks.ts";
 import { fetchSections} from "../../redux/sectionsReducer.ts";
 import {fetchChats} from "../../redux/chatsReducer.ts";
+import {getThreads} from "../../redux/threadsReducer.ts";
 
 export const Channels = () => {
 
     const {sections} = useAppSelector(({sections}) => sections );
     const {chats} = useAppSelector(({chats}) => chats);
+    const {threads} = useAppSelector(({threads}) => threads);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(fetchSections());
         dispatch(fetchChats());
+        dispatch(getThreads())
     }, [dispatch]);
 
-    console.log(chats);
 
     return (
         <Wrapper>
@@ -27,8 +29,20 @@ export const Channels = () => {
                         { chats.length &&
                             <ul>
                                 { chats.filter(chat => chat.section_id === id)
-                                    .map(
-                                        ({id, title}) => <li key={id}>{title}</li>
+                                    .map(el =>
+                                        <li key={el.id}>
+                                            <div>{el.title}</div>
+                                            {   threads.length &&
+                                                    <ul>
+                                                        {
+                                                            threads.filter(thread => {
+                                                                return thread.chat_id === el.id
+                                                            }).map(thread => {
+                                                            return <li>{thread.title}</li>
+                                                        })}
+                                                    </ul>
+                                            }
+                                        </li>
                                     )
                                 }
                             </ul>
